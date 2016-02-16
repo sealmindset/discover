@@ -1,8 +1,44 @@
 #!/bin/bash
 
-location='tallBuilding'
-subnet='127.0.0.1'
-ipList='results/ipList.txt'
+function usage {
+        echo "usage: $1 [-s subnet] [-l location] [-r livehost]"
+        echo
+        echo "      -s subnet:      e.g., 192.168.30.0/23"
+        echo "      -l location:    e.g., lab"
+        echo "      -r results:     e.g., livehosts.txt"
+        echo
+}
+
+sn=""
+lc=""
+rs=""
+
+while getopts "s:l:r" OPT; do
+        case $OPT in
+                f) sn=$OPTARG;;
+                L) lc=$OPTARG;;
+                r) rs=$OPTARG;;
+                *) usage $0; ext;;
+        esac
+done
+
+if [ -v $sn ]; then
+    subnet = $sn
+else
+    subnet = '192.168.30.0/23'
+fi
+
+if [ -v $lc ]; then
+    location = $lc
+else
+    location = 'lab'
+fi
+
+if [ -v $rs ]; then
+    ipList = $rs
+else
+    ipList = 'results/ipList.txt'
+fi
 
 # Creates the output and the results directory if they need to be created
 if [ ! -d "output" ]; then
@@ -31,6 +67,7 @@ declare -a nmapSwitches=('-sV -p 20,21,22 --open --script ftp-anon.nse'
             '-p 161 -sU --script snmp-brute'
             '--script smb-os-discovery.nse -p 445'
             '--script smb-check-vulns -p 445'
+            '--script smb-enum-users.nse -p 445'
             '--script smb-enum-shares.nse --script-args smbdomain=domain,smbuser=user,smbpass=password -p 445');
 declare -a typeOfScan=('nmap-sV-FTP' 
             'nmap-sV-VNC'
@@ -40,6 +77,7 @@ declare -a typeOfScan=('nmap-sV-FTP'
             'nmap-SNMP'
             'nmap-Samba-445'
             'nmap-Samba-check-vulns'
+            'nmap-smb-enum-users'
             'nmap-Samba-enum-shares');
 
 for ((i=0; i<${#nmapSwitches[@]}; i++)); do
