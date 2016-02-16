@@ -9,38 +9,19 @@ function usage {
         echo
 }
 
-sn=""
-lc=""
-rs=""
+subnet=""
+location=""
+ipList=""
 
 while getopts ":s:l:r:" OPT; do
         case $OPT in
-                s) sn=$OPTARG;;
-                l) lc=$OPTARG;;
-                r) rs=$OPTARG;;
+                s) subnet=$OPTARG;;
+                l) location=$OPTARG;;
+                r) ipList=$OPTARG;;
                 *) usage $0; ext;;
         esac
 done
 
-if [ -z "$sn" ]; then
-    subnet = $sn
-else
-    subnet = '192.168.30.0/23'
-fi
-
-if [ -z "$lc" ]; then
-    location = $lc
-else
-    location = 'lab'
-fi
-
-if [ -z "$rs" ]; then
-    ipList = $rs
-else
-    ipList = 'results/ipList.txt'
-fi
-
-echo "$sn -> $lc -> $rs"
 echo "$subnet -> $location -> $ipList"
 
 # Creates the output and the results directory if they need to be created
