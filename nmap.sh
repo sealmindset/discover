@@ -3,9 +3,9 @@
 function usage {
         echo "usage: $1 [-s subnet] [-l location] [-r livehost]"
         echo
-        echo "      -s subnet:      e.g., 192.168.30.0/23"
-        echo "      -l location:    e.g., lab"
-        echo "      -r results:     e.g., livehosts.txt"
+        echo "      -s subnet:      e.g., 192.168.30.0/23, 192.168.31.206"
+        echo "      -l location:    e.g., lab, home, work, big blue box or red"
+        echo "      -r results:     e.g., results/livehosts.txt"
         echo
 }
 
@@ -13,16 +13,27 @@ subnet=""
 location=""
 ipList=""
 
-while getopts ":s:l:r:" OPT; do
+while getopts ":s:l:r:h" OPT; do
         case $OPT in
                 s) subnet=$OPTARG;;
                 l) location=$OPTARG;;
                 r) ipList=$OPTARG;;
-                *) usage $0; ext;;
+                h) usage $0; exit;;
+                *) usage $0; exit;;
         esac
 done
 
-echo "$subnet -> $location -> $ipList"
+if [ -z "$subnet" ]; then
+        subnet="192.168.30.0/23"
+fi
+
+if [ -z "$location" ]; then
+        location="lab"
+fi
+
+if [ -z "$ipList" ]; then
+        ipList="ipList.txt"
+fi
 
 # Creates the output and the results directory if they need to be created
 if [ ! -d "output" ]; then
