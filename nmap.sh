@@ -63,7 +63,10 @@ declare -a nmapSwitches=('-sV -p 20,21,22 --open --script ftp-anon.nse'
             '--script smb-os-discovery.nse -p 445'
             '--script smb-check-vulns -p 445'
             '--script smb-enum-users.nse -p 445'
-            '--script smb-enum-shares.nse --script-args smbdomain=domain,smbuser=user,smbpass=password -p 445');
+            '--script smb-enum-shares.nse --script-args smbdomain=domain,smbuser=user,smbpass=password -p 445'
+            '--script smb-check-vulns.nse --script-args=unsafe=1 -p 445'
+            '-sU --script nbstat.nse -p137'
+            '-sV -sC');
 declare -a typeOfScan=('nmap-sV-FTP' 
             'nmap-sV-VNC'
             'nmap-sV-VNC-auth-bypass'
@@ -73,7 +76,10 @@ declare -a typeOfScan=('nmap-sV-FTP'
             'nmap-Samba-445'
             'nmap-Samba-check-vulns'
             'nmap-smb-enum-users'
-            'nmap-Samba-enum-shares');
+            'nmap-Samba-enum-shares'
+            'nmap-check-vulns'
+            'nmap-nbstat'
+            'nmap-upnp-info');
 
 for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     typeOfScanVar=${typeOfScan[$i]}
