@@ -43,7 +43,7 @@ fi
 
 # Run a host discovery scan to see which devices are available in the subnet
 typeOfScan='nmap-sP'
-nmap -sP $subnet -oA output/$location-$typeOfScan
+nmap -sP -oA output/$location-$typeOfScan $subnet
 
 # From the host discovery put together a list of IP Addresses that can be used in future scans
 if [ -f "output/$location-$typeOfScan.nmap" ]; then
