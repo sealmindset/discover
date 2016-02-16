@@ -15,26 +15,26 @@ rs=""
 
 while getopts "s:l:r" OPT; do
         case $OPT in
-                f) sn=$OPTARG;;
+                s) sn=$OPTARG;;
                 L) lc=$OPTARG;;
                 r) rs=$OPTARG;;
                 *) usage $0; ext;;
         esac
 done
 
-if [ -v $sn ]; then
+if [ ! -z $sn ]; then
     subnet = $sn
 else
     subnet = '192.168.30.0/23'
 fi
 
-if [ -v $lc ]; then
+if [ ! -z $lc ]; then
     location = $lc
 else
     location = 'lab'
 fi
 
-if [ -v $rs ]; then
+if [ ! -z $rs ]; then
     ipList = $rs
 else
     ipList = 'results/ipList.txt'
