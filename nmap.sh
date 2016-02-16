@@ -40,6 +40,9 @@ else
     ipList = 'results/ipList.txt'
 fi
 
+echo "$sn -> $lc -> $rs"
+echo "$subnet -> $location -> $ipList"
+
 # Creates the output and the results directory if they need to be created
 if [ ! -d "output" ]; then
     mkdir output
