@@ -40,18 +40,18 @@ if [ $(type xsltproc | wc -l) -lt 1 ]; then
         apt-get install xsltproc
 fi
 
+# Creates the output and the results directory if they need to be created
+if [ ! -d "output" ]; then
+    mkdir output
+    mkdir results
+fi
+
 echo "<!doctype html>" >> results/index.html
 echo "<html>" >> results/index.html
 echo "<head>" >> results/index.html
 echo "  <title>Results Report</title>" >> results/index.html
 echo "</head>" >> results/index.html
 echo "<body>" >> results/index.html
-
-# Creates the output and the results directory if they need to be created
-if [ ! -d "output" ]; then
-    mkdir output
-    mkdir results
-fi
 
 # Run a host discovery scan to see which devices are available in the subnet
 typeOfScan='nmap-sn'
