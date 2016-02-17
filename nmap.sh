@@ -58,7 +58,7 @@ typeOfScan='nmap-sn'
 nmap -sn $subnet -oG output/$location-$typeOfScan
 
 # From the host discovery put together a list of IP Addresses that can be used in future scans
-if [ -f "output/$location-$typeOfScan.nmap" ]; then
+if [ -f "output/$location-$typeOfScan.gnmap" ]; then
     grep UP output/$location-$typeOfScan.gnmap | cut -d" " -f2 > $ipList
 else
     echo "Unable to find the nmap host discovery list."
