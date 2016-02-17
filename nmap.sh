@@ -24,11 +24,11 @@ while getopts ":s:l:r:h" OPT; do
 done
 
 if [ -z "$subnet" ]; then
-        subnet="192.168.30.0/23"
+        subnet="192.168.31.200-254"
 fi
 
 if [ -z "$location" ]; then
-        location="lab"
+        location="lab6"
 fi
 
 if [ -z "$ipList" ]; then
@@ -40,6 +40,13 @@ if [ $(type xsltproc | wc -l) -lt 1 ]; then
         apt-get install xsltproc
 fi
 
+echo "<!doctype html>" >> results/index.html
+echo "<html>" >> results/index.html
+echo "<head>" >> results/index.html
+echo "  <title>Results Report</title>" >> results/index.html
+echo "</head>" >> results/index.html
+echo "<body>" >> results/index.html
+
 # Creates the output and the results directory if they need to be created
 if [ ! -d "output" ]; then
     mkdir output
@@ -47,19 +54,20 @@ if [ ! -d "output" ]; then
 fi
 
 # Run a host discovery scan to see which devices are available in the subnet
-typeOfScan='nmap-sP'
-nmap -sP -oA output/$location-$typeOfScan $subnet
+typeOfScan='nmap-sn'
+nmap -sn $subnet -oG output/$location-$typeOfScan
 
 # From the host discovery put together a list of IP Addresses that can be used in future scans
 if [ -f "output/$location-$typeOfScan.nmap" ]; then
-    cat output/$location-$typeOfScan.nmap | grep "Nmap scan report for" | awk '{print $5}' > $ipList
+    grep UP output/$location-$typeOfScan.gnmap | cut -d" " -f2 > $ipList
 else
     echo "Unable to find the nmap host discovery list."
     exit
 fi
 
 ################### Create a loop of the various nmap scans to perform ##############################
-declare -a nmapSwitches=('-sV -p 20,21,22 --open --script ftp-anon.nse' 
+declare -a nmapSwitches=('-sT --top-ports 20'
+            '-sV -p 20,21,22 --open --script ftp-anon.nse'
             '-sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script vnc-info.nse'
             '-sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script realvnc-auth-bypass.nse'
             '-p 69 -sU --open --script tftp-enum.nse'
@@ -71,8 +79,14 @@ declare -a nmapSwitches=('-sV -p 20,21,22 --open --script ftp-anon.nse'
             '--script smb-enum-shares.nse --script-args smbdomain=domain,smbuser=user,smbpass=password -p 445'
             '--script smb-check-vulns.nse --script-args=unsafe=1 -p 445'
             '-sU --script nbstat.nse -p137'
-            '-sV -sC');
-declare -a typeOfScan=('nmap-sV-FTP' 
+            '-sV -sC'
+            '-sU -A -PN -n -pU:19,53,123,161 --script=ntp-monlist,dns-recursion,snmp-sysdescr'
+            '-sV -p 443 --script=ssl_heartbleed.nse'
+            '--script=http-title'
+            '--script=http-headers'
+            '--script=http-enum');
+declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
+            'nmap-sV-FTP'
             'nmap-sV-VNC'
             'nmap-sV-VNC-auth-bypass'
             'nmap-sU-TFTP'
@@ -84,12 +98,25 @@ declare -a typeOfScan=('nmap-sV-FTP'
             'nmap-Samba-enum-shares'
             'nmap-check-vulns'
             'nmap-nbstat'
-            'nmap-upnp-info');
+            'nmap-upnp-info'
+            'nmap-UDP-DDOS-reflectors'
+            'nmap-heartbleed'
+            'nmap-HTTP-Title'
+            'nmap-HTTP-Headers'
+            'nmap-HTTP-Paths');
 
 for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     typeOfScanVar=${typeOfScan[$i]}
     nmapSwitchesVar=${nmapSwitches[$i]}
     nmap $nmapSwitchesVar -iL $ipList -oA output/$location-$typeOfScanVar
-    xsltproc output/$location-$typeOfScanVar.xml -o results/$location-$typeOfScanVar.html
-    echo '<a href="$location-$typeOfScanVar.html">$typeOfScanVar</a>' >> results/index.html
+    # Generate a report based on the results
+        xsltproc output/$location-$typeOfScanVar.xml -o results/$location-$typeOfScanVar.html
+        echo "<a href=" >> results/index.html
+        echo $location-$typeOfScanVar.html >> results/index.html
+        echo ">" >> results/index.html
+        echo $typeOfScanVar >> results/index.html
+        echo "</a></br>" >> results/index.html
 done
+
+echo "</body>" >> results/index.html
+echo "</html>" >> results/index.html
