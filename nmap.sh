@@ -5,7 +5,7 @@ function usage {
         echo
         echo "      -s subnet:      e.g., 192.168.30.0/23, 192.168.31.206"
         echo "      -l location:    e.g., lab, home, work, big blue box or red"
-        echo "      -r results:     e.g., results/livehosts.txt"
+        echo "      -r results:     e.g., results/ipList.txt"
         echo
 }
 
@@ -32,7 +32,7 @@ if [ -z "$location" ]; then
 fi
 
 if [ -z "$ipList" ]; then
-        ipList="ipList.txt"
+        ipList="results/ipList.txt"
 fi
 
 # For creating report from the XML results
