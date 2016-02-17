@@ -67,24 +67,25 @@ fi
 
 ################### Create a loop of the various nmap scans to perform ##############################
 declare -a nmapSwitches=('-sT --top-ports 20'
-            '-sV -p 20,21,22 --open --script ftp-anon.nse'
-            '-sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script vnc-info.nse'
-            '-sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script realvnc-auth-bypass.nse'
-            '-p 69 -sU --open --script tftp-enum.nse'
-            '-p T:53,U:53 --open'
-            '-p 161 -sU --script snmp-brute'
-            '--script smb-os-discovery.nse -p 445'
-            '--script smb-check-vulns -p 445'
-            '--script smb-enum-users.nse -p 445'
-            '--script smb-enum-shares.nse --script-args smbdomain=domain,smbuser=user,smbpass=password -p 445'
-            '--script smb-check-vulns.nse --script-args=unsafe=1 -p 445'
-            '-sU --script nbstat.nse -p137'
-            '-sV -sC'
+            '-Pn -n -sV -p 20,21,22 --open --script ftp-anon.nse'
+            '-Pn -n -sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script vnc-info.nse'
+            '-Pn -n -sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script realvnc-auth-bypass.nse'
+            '-Pn -n -p 69 -sU --open --script tftp-enum.nse'
+            '-Pn -n -p T:53,U:53 --open'
+            '-Pn -n -p 161 -sU --script snmp-brute'
+            '-Pn -n --script smb-os-discovery.nse -p 445'
+            '-Pn -n --script smb-check-vulns -p 445'
+            '-Pn -n --script smb-enum-users.nse -p 445'
+            '-Pn -n --script smb-enum-shares.nse --script-args smbdomain=domain,smbuser=user,smbpass=password -p 445'
+            '-Pn -n --script smb-check-vulns.nse --script-args=unsafe=1 -p 445'
+            '-Pn -n -sU --script nbstat.nse -p 137'
+            '-Pn -n -sV -sC'
             '-sU -A -PN -n -pU:19,53,123,161 --script=ntp-monlist,dns-recursion,snmp-sysdescr'
-            '-sV -p 443 --script=ssl_heartbleed.nse'
-            '--script=http-title'
-            '--script=http-headers'
-            '--script=http-enum');
+            '-Pn -n -sV -p 443 --script=ssl-heartbleed.nse --open'
+            '-Pn -n -p 80,443 --script=http-title --open'
+            '-Pn -n -p 80,443 --script=http-headers --open'
+            '-Pn -n -p 80,443 --script=http-enum --open'
+            '-Pn -n -p 80,443 --script=http-method --open');
 declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-sV-FTP'
             'nmap-sV-VNC'
@@ -103,7 +104,8 @@ declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-heartbleed'
             'nmap-HTTP-Title'
             'nmap-HTTP-Headers'
-            'nmap-HTTP-Paths');
+            'nmap-HTTP-Paths'
+            'nmap-HTTP-Methods');
 
 for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     typeOfScanVar=${typeOfScan[$i]}
