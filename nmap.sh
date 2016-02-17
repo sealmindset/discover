@@ -1,9 +1,5 @@
 #!/bin/bash
 
-if [ $(type xsltproc | wc -l) -lt 1 ]; then
-        apt-get install xsltproc
-fi
-
 function usage {
         echo "usage: $1 [-s subnet] [-l location] [-r livehost]"
         echo
@@ -37,6 +33,11 @@ fi
 
 if [ -z "$ipList" ]; then
         ipList="ipList.txt"
+fi
+
+# For creating report from the XML results
+if [ $(type xsltproc | wc -l) -lt 1 ]; then
+        apt-get install xsltproc
 fi
 
 # Creates the output and the results directory if they need to be created
