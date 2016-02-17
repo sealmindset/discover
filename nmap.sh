@@ -55,7 +55,7 @@ echo "<body>" >> results/index.html
 
 # Run a host discovery scan to see which devices are available in the subnet
 typeOfScan='nmap-sn'
-nmap -sn $subnet -oG output/$location-$typeOfScan
+nmap -sn $subnet -oG output/$location-$typeOfScan.gnmap
 
 # From the host discovery put together a list of IP Addresses that can be used in future scans
 if [ -f "output/$location-$typeOfScan.gnmap" ]; then
