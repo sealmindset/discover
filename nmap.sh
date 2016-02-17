@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ $(type xsltproc | wc -l) -lt 1 ]; then
+        apt-get install xsltproc
+fi
+
 function usage {
         echo "usage: $1 [-s subnet] [-l location] [-r livehost]"
         echo
@@ -85,4 +89,6 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     typeOfScanVar=${typeOfScan[$i]}
     nmapSwitchesVar=${nmapSwitches[$i]}
     nmap $nmapSwitchesVar -iL $ipList -oA output/$location-$typeOfScanVar
+    xsltproc output/$location-$typeOfScanVar.xml -o results/$location-$typeOfScanVar.html
+    echo '<a href="$location-$typeOfScanVar.html">$typeOfScanVar</a>' >> results/index.html
 done
