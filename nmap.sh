@@ -46,6 +46,14 @@ if [ ! -f /usr/share/nmap/scripts/smb-check-vulns.nse ]; then
     fi
 fi
 
+if [ ! -f /usr/share/nmap/scripts/http-screenshot.nse ]; then
+        wget -c http://wkhtmltopdf.googlecode.com/files/wkhtmltoimage-0.11.0_rc1-static-i386.tar.bz2
+        tar -xjvf wkhtmltoimage-0.11.0_rc1-static-i386.tar.bz2
+        cp wkhtmltoimage-i386 /usr/local/bin/
+        git clone https://github.com/SpiderLabs/Nmap-Tools.git
+        cp Nmap-Tools/NSE/http-screenshot.nse /usr/share/nmap/scripts/
+        nmap --script-updatedb
+fi
 
 # Creates the output and the results directory if they need to be created
 if [ ! -d "output" ]; then
@@ -91,7 +99,9 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,443 --script=http-title --open'
             '-Pn -n -p 80,443 --script=http-headers --open'
             '-Pn -n -p 80,443 --script=http-enum --open'
-            '-Pn -n -p 80,443 --script=http-methods --open');
+            '-Pn -n -p 80,443 --script=http-methods --open'
+            '-Pn -n --script=http-passwd'
+            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot --open');
 declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-sV-Banner'
             'nmap-sV-FTP'
@@ -110,7 +120,8 @@ declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-HTTP-Title'
             'nmap-HTTP-Headers'
             'nmap-HTTP-Paths'
-            'nmap-HTTP-Methods');
+            'nmap-HTTP-Methods'
+            'nmap-screenshot');
 
 for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     typeOfScanVar=${typeOfScan[$i]}
