@@ -40,6 +40,13 @@ if [ $(type xsltproc | wc -l) -lt 1 ]; then
         apt-get install xsltproc
 fi
 
+if [ ! -f /usr/share/nmap/scripts/smb-check-vulns.nse ]; then
+    if [ -f smb-check-vulns.txt ]; then
+        cp smb-check-vulns.txt /usr/share/nmap/scripts/smb-check-vulns.nse
+    fi
+fi
+
+
 # Creates the output and the results directory if they need to be created
 if [ ! -d "output" ]; then
     mkdir output
