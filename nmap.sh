@@ -49,7 +49,7 @@ fi
 if [ ! -f /usr/share/nmap/scripts/http-screenshot.nse ]; then
         wget -c http://wkhtmltopdf.googlecode.com/files/wkhtmltoimage-0.11.0_rc1-static-i386.tar.bz2
         tar -xjvf wkhtmltoimage-0.11.0_rc1-static-i386.tar.bz2
-        cp wkhtmltoimage-i386 /usr/local/bin/
+        cp wkhtmltoimage-i386 /usr/bin/
         git clone https://github.com/SpiderLabs/Nmap-Tools.git
         cp Nmap-Tools/NSE/http-screenshot.nse /usr/share/nmap/scripts/
         nmap --script-updatedb
