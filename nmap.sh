@@ -152,7 +152,7 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     typeOfScanVar=${typeOfScan[$i]}
     nmapSwitchesVar=${nmapSwitches[$i]}
     echo
-    echo "Running Scan $typeOfScanVar"
+    echo "Running scan $i of ${#nmapSwitches[@]} - $typeOfScanVar"
     echo
     nmap $nmapSwitchesVar -iL $ipList -oA $output/$location-$typeOfScanVar
     # Generate a report based on the results
