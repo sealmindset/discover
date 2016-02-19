@@ -17,11 +17,11 @@ function usage {
 function updhtml {
 lc=$1
 sv=$2
-for i in `ls -R $results/*.png`;do
-echo $i
+cd $results
+for i in `ls -R *.png`;do
+        i=${i/results/}
         b=${i/.png/ }
         b=${b/-/:}
-echo $b
         replace "Saved to $i" "<p><a href='https://$b' target='_blank'>https://$b</a></br><img src='$i'></p>" -- $results/$lc-$sv.html
 done
 }
@@ -92,10 +92,14 @@ nmap -sn $subnet -oG $ognmap
 
 # From the host discovery put together a list of IP Addresses that can be used in future scans
 if [ -f "${output}/$location-$typeOfScan.gnmap" ]; then
+    echo
     echo "Creating a $ipList from $ognmap"
+    echo
     grep Up $ognmap | cut -d" " -f2 >> $ipList
 else
-    echo "Unable to find the nmap host discovery list."
+    echo "************************************************"
+    echo "* Unable to find the nmap host discovery list! *"
+    echo "************************************************"    
     exit
 fi
 
@@ -147,18 +151,27 @@ declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
 for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     typeOfScanVar=${typeOfScan[$i]}
     nmapSwitchesVar=${nmapSwitches[$i]}
+    echo
     echo "Running Scan $typeOfScanVar"
+    echo
     nmap $nmapSwitchesVar -iL $ipList -oA $output/$location-$typeOfScanVar
     # Generate a report based on the results
         xsltproc $output/$location-$typeOfScanVar.xml -o $results/$location-$typeOfScanVar.html
-cat << 'EOF2' >> $results/index.html
-                <a href='$location-$typeOfScanVar.html'>$typeOfScanVar</a></br>
-EOF2
+        echo "<a href=\"" >> $results/index.html
+        echo $location-$typeOfScanVar.html
+        echo "\">" >> $results/index.html
+        echo $typeOfScanVar >> $results/index.html
+        echo "</a></br>" >> $results/index.html
 done
 
-echo "Moving images into the results folder."
-mv ${PWD}/*.png $results
+if [ -f ${PWD}/*.png ]; then
+        mv ${PWD}/*.png $results
+        rm ${PWD}/*.html
+fi
+
+echo
 echo "Updating the $location-nmap-HTTP-screenshot.html"
+echo
 updhtml $location 'nmap-HTTP-screenshot'
 
 cat << 'EOF3' >> $results/index.html
