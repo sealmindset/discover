@@ -48,11 +48,6 @@ if [ -z "$ipList" ]; then
         ipList="${PWD}/results/ipList.txt"
 fi
 
-if [ -z "$outfile" ]; then
-        outfile="${PWD}/results/"
-fi
-
-
 # For creating report from the XML results
 if [ $(type xsltproc | wc -l) -lt 1 ]; then
         apt-get install xsltproc
@@ -75,17 +70,19 @@ if [ ! -f /usr/share/nmap/scripts/http-screenshot-html.nse ]; then
 fi
 
 # Creates the output and the results directory if they need to be created
-if [ ! -d "output" ]; then
-    mkdir output
-    mkdir results
+if [ ! -d "${PWD}/output" ]; then
+    mkdir ${PWD}/output
+    mkdir ${PWD}/results
 fi
 
-echo "<!doctype html>" >> results/index.html
-echo "<html>" >> results/index.html
-echo "<head>" >> results/index.html
-echo "  <title>Results Report</title>" >> results/index.html
-echo "</head>" >> results/index.html
-echo "<body>" >> results/index.html
+cat << 'EOF' > ${PWD}/results/index.html
+<!doctype html>
+<html>
+        <head>
+                <title>Results Report</title>
+        </head>
+        <body>
+EOF
 
 # Run a host discovery scan to see which devices are available in the subnet
 typeOfScan='nmap-sn'
@@ -151,12 +148,9 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     nmap $nmapSwitchesVar -iL $ipList -oA output/$location-$typeOfScanVar
     # Generate a report based on the results
         xsltproc output/$location-$typeOfScanVar.xml -o results/$location-$typeOfScanVar.html
-        echo "<a href=" >> results/index.html
-        echo $location-$typeOfScanVar.html >> results/index.html
-        echo ">" >> results/index.html
-        echo $typeOfScanVar >> results/index.html
-        echo "</a></br>" >> results/index.html
-        
+        cat << 'EOF2' >> ${PWD}/results/index.html
+                <a href="$location-$typeOfScanVar.html">$typeOfScanVar</a></br>
+        EOF2
 done
 
 echo "Moving images into the results folder."
@@ -164,5 +158,7 @@ mv ${PWD}/*.png ${PWD}/results/
 echo "Updating the $location-nmap-HTTP-screenshot.html"
 updhtml $location 'nmap-HTTP-screenshot'
 
-echo "</body>" >> results/index.html
-echo "</html>" >> results/index.html
+cat << 'EOF3' >> ${PWD}/results/index.html
+        </body>
+</html>
+EOF3
