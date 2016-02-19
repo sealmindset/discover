@@ -6,18 +6,33 @@ function usage {
         echo "      -s subnet:      e.g., 192.168.30.0/23, 192.168.31.206"
         echo "      -l location:    e.g., lab, home, work, big blue box or red"
         echo "      -r results:     e.g., results/ipList.txt"
+        echo "      -o outfile:     e.g., /data/lab/results/"
+        echo "      -h help:"
         echo
+}
+
+function updimg {
+echo "Updating file"
+lctn=$1
+tScanVar=$2
+
+for i in `ls -R ${PWD}/results/*.png`;do
+        b=${i/.png/ }
+        b=${b/-/:}
+        replace "Saved to $i" "<p><a href='https://$b' target='_blank'>https://$b</a></br><img src='$i'></p>" -- ${PWD}/results/$lctn-$tScanVar.html
+done
 }
 
 subnet=""
 location=""
 ipList=""
 
-while getopts ":s:l:r:h" OPT; do
+while getopts ":s:l:r:o:h" OPT; do
         case $OPT in
                 s) subnet=$OPTARG;;
                 l) location=$OPTARG;;
                 r) ipList=$OPTARG;;
+                o) outfile=$OPTARG;;
                 h) usage $0; exit;;
                 *) usage $0; exit;;
         esac
@@ -32,8 +47,13 @@ if [ -z "$location" ]; then
 fi
 
 if [ -z "$ipList" ]; then
-        ipList="results/ipList.txt"
+        ipList="${PWD}/results/ipList.txt"
 fi
+
+if [ -z "$outfile" ]; then
+        outfile="${PWD}/results/"
+fi
+
 
 # For creating report from the XML results
 if [ $(type xsltproc | wc -l) -lt 1 ]; then
@@ -46,12 +66,7 @@ if [ ! -f /usr/share/nmap/scripts/smb-check-vulns.nse ]; then
     fi
 fi
 
-if [ ! -f /usr/share/nmap/scripts/http-screenshot.nse ]; then
-        wget -c http://wkhtmltopdf.googlecode.com/files/wkhtmltoimage-0.11.0_rc1-static-i386.tar.bz2
-        tar -xjvf wkhtmltoimage-0.11.0_rc1-static-i386.tar.bz2
-        cp wkhtmltoimage-i386 /usr/bin/
-        git clone https://github.com/SpiderLabs/Nmap-Tools.git
-        cp Nmap-Tools/NSE/http-screenshot.nse /usr/share/nmap/scripts/
+if [ ! -f /usr/share/nmap/scripts/http-screenshot-html.nse ]; then
         nmap --script-updatedb
 fi
 
@@ -82,7 +97,7 @@ fi
 
 ################### Create a loop of the various nmap scans to perform ##############################
 declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
-            '-Pn -n -sV --script=banner'
+            '-Pn -n -sV --script=banner -T5'
             '-Pn -n -sV -p 20,21,22 --open --script=ftp-anon.nse'
             '-Pn -n -sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script=vnc-info.nse'
             '-Pn -n -sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script=realvnc-auth-bypass.nse'
@@ -101,7 +116,8 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,443 --script=http-enum --open'
             '-Pn -n -p 80,443 --script=http-methods --open'
             '-Pn -n --script=http-passwd'
-            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot --open');
+            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --open');
+
 declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-sV-Banner'
             'nmap-sV-FTP'
@@ -121,7 +137,8 @@ declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-HTTP-Headers'
             'nmap-HTTP-Paths'
             'nmap-HTTP-Methods'
-            'nmap-screenshot');
+            'nmap-HTTP-PASSWD'
+            'nmap-HTTP-screenshot');
 
 for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     typeOfScanVar=${typeOfScan[$i]}
@@ -135,6 +152,7 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
         echo ">" >> results/index.html
         echo $typeOfScanVar >> results/index.html
         echo "</a></br>" >> results/index.html
+        updimg $location $typeOfScanVar
 done
 
 echo "</body>" >> results/index.html
