@@ -11,15 +11,13 @@ function usage {
         echo
 }
 
-function updimg {
-echo "Updating file"
-lctn=$1
-tScanVar=$2
-
+function updhtml {
+lc=$1
+sv=$2
 for i in `ls -R ${PWD}/results/*.png`;do
         b=${i/.png/ }
         b=${b/-/:}
-        replace "Saved to $i" "<p><a href='https://$b' target='_blank'>https://$b</a></br><img src='$i'></p>" -- ${PWD}/results/$lctn-$tScanVar.html
+        replace "Saved to $i" "<p><a href='https://$b' target='_blank'>https://$b</a></br><img src='$i'></p>" -- ${PWD}/results/$lc-$sv.html
 done
 }
 
@@ -67,6 +65,12 @@ if [ ! -f /usr/share/nmap/scripts/smb-check-vulns.nse ]; then
 fi
 
 if [ ! -f /usr/share/nmap/scripts/http-screenshot-html.nse ]; then
+        wget -c http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
+        tar -xJf wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
+        mv ${PWD}/wkhtmltox/bin/wkhtmltoimage /usr/local/bin
+        git clone https://github.com/afxdub/http-screenshot-html.git
+        mv ${PWD}/http-screenshot-html/http-screenshot-html.nse /usr/share/nmap/scripts/
+        rm -rf ${PWD}/http-screenshot-html
         nmap --script-updatedb
 fi
 
@@ -152,8 +156,13 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
         echo ">" >> results/index.html
         echo $typeOfScanVar >> results/index.html
         echo "</a></br>" >> results/index.html
-        updimg $location $typeOfScanVar
+        
 done
+
+echo "Moving images into the results folder."
+mv ${PWD}/*.png ${PWD}/results/
+echo "Updating the $location-nmap-HTTP-screenshot.html"
+updhtml $location 'nmap-HTTP-screenshot'
 
 echo "</body>" >> results/index.html
 echo "</html>" >> results/index.html
