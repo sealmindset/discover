@@ -1,12 +1,15 @@
 #!/bin/bash
 
+# Defaults
+output="${PWD}/output"
+outpath="${PWD}/results"
+ipList="${outpath}/ipList.txt"
+
 function usage {
-        echo "usage: $1 [-s subnet] [-l location] [-r livehost] [-o outfile]"
+        echo "usage: $1 [-s subnet] [-l location]"
         echo
-        echo "      -s subnet:      e.g., 192.168.30.0/23, 192.168.31.206"
-        echo "      -l location:    e.g., lab, home, work, big blue box or red"
-        echo "      -r results:     e.g., results/ipList.txt"
-        echo "      -o outfile:     e.g., results/ - for screenshots"
+        echo "      -s subnet:          e.g., 192.168.30.0/23, 192.168.31.206"
+        echo "      -l location:        e.g., lab, home, work, big blue box or red"
         echo "      -h help:"
         echo
 }
@@ -14,24 +17,20 @@ function usage {
 function updhtml {
 lc=$1
 sv=$2
-for i in `ls -R ${PWD}/results/*.png`;do
+for i in `ls -R ${outpath}/*.png`;do
         b=${i/.png/ }
         b=${b/-/:}
-        replace "Saved to $i" "<p><a href='https://$b' target='_blank'>https://$b</a></br><img src='$i'></p>" -- ${PWD}/results/$lc-$sv.html
+        replace "Saved to $i" "<p><a href='https://$b' target='_blank'>https://$b</a></br><img src='$i'></p>" -- ${outpath}/$lc-$sv.html
 done
 }
 
 subnet=""
 location=""
-ipList=""
-outFile=""
 
-while getopts ":s:l:r:o:h" OPT; do
+while getopts ":s:l:h" OPT; do
         case $OPT in
                 s) subnet=$OPTARG;;
                 l) location=$OPTARG;;
-                r) ipList=$OPTARG;;
-                o) outFile=$OPTARG;;
                 h) usage $0; exit;;
                 *) usage $0; exit;;
         esac
@@ -43,14 +42,6 @@ fi
 
 if [ -z "$location" ]; then
         location="lab6"
-fi
-
-if [ -z "$ipList" ]; then
-        ipList="${PWD}/results/ipList.txt"
-fi
-
-if [ -z "$outFile" ]; then
-        outFile="${PWD}/results"
 fi
 
 # For creating report from the XML results
@@ -80,7 +71,7 @@ if [ ! -d "${PWD}/output" ]; then
     mkdir ${PWD}/results
 fi
 
-cat << 'EOF' > ${PWD}/results/index.html
+cat << 'EOF' > ${outpath}/index.html
 <!doctype html>
 <html>
         <head>
@@ -91,11 +82,11 @@ EOF
 
 # Run a host discovery scan to see which devices are available in the subnet
 typeOfScan='nmap-sn'
-nmap -sn $subnet -oG output/$location-$typeOfScan.gnmap
+nmap -sn $subnet -oG ${output}/$location-$typeOfScan.gnmap
 
 # From the host discovery put together a list of IP Addresses that can be used in future scans
-if [ -f "${PWD}/output/$location-$typeOfScan.gnmap" ]; then
-    grep Up ${PWD}/output/$location-$typeOfScan.gnmap | cut -d" " -f2 > $ipList
+if [ -f "${output}/$location-$typeOfScan.gnmap" ]; then
+    grep Up ${output}/$location-$typeOfScan.gnmap | cut -d" " -f2 >> $ipList
 else
     echo "Unable to find the nmap host discovery list."
     exit
@@ -122,7 +113,7 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,443 --script=http-enum --open'
             '-Pn -n -p 80,443 --script=http-methods --open'
             '-Pn -n --script=http-passwd'
-            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --script-args=outfile=${outFile}');
+            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --script-args=outpath='${outpath});
 
 declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-sV-Banner'
@@ -150,10 +141,10 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     typeOfScanVar=${typeOfScan[$i]}
     nmapSwitchesVar=${nmapSwitches[$i]}
     echo "Running Scan $typeOfScanVar"
-    nmap $nmapSwitchesVar -iL $ipList -oA output/$location-$typeOfScanVar
+    nmap $nmapSwitchesVar -iL $ipList -oA ${output}/$location-$typeOfScanVar
     # Generate a report based on the results
-        xsltproc ${PWD}/output/$location-$typeOfScanVar.xml -o ${PWD}/results/$location-$typeOfScanVar.html
-cat << 'EOF2' >> ${PWD}/results/index.html
+        xsltproc ${output}/$location-$typeOfScanVar.xml -o ${outpath}/$location-$typeOfScanVar.html
+cat << 'EOF2' >> ${outpath}/index.html
                 <a href="$location-$typeOfScanVar.html">$typeOfScanVar</a></br>
 EOF2
 done
@@ -163,7 +154,7 @@ echo "Moving images into the results folder."
 echo "Updating the $location-nmap-HTTP-screenshot.html"
 updhtml $location 'nmap-HTTP-screenshot'
 
-cat << 'EOF3' >> ${PWD}/results/index.html
+cat << 'EOF3' >> ${outpath}/index.html
         </body>
 </html>
 EOF3
