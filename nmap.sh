@@ -18,8 +18,10 @@ function updhtml {
 lc=$1
 sv=$2
 for i in `ls -R $results/*.png`;do
+echo $i
         b=${i/.png/ }
         b=${b/-/:}
+echo $b
         replace "Saved to $i" "<p><a href='https://$b' target='_blank'>https://$b</a></br><img src='$i'></p>" -- $results/$lc-$sv.html
 done
 }
@@ -150,7 +152,7 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     # Generate a report based on the results
         xsltproc $output/$location-$typeOfScanVar.xml -o $results/$location-$typeOfScanVar.html
 cat << 'EOF2' >> $results/index.html
-                <a href="$location-$typeOfScanVar.html">$typeOfScanVar</a></br>
+                <a href='$location-$typeOfScanVar.html'>$typeOfScanVar</a></br>
 EOF2
 done
 
