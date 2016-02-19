@@ -3,7 +3,7 @@
 # Defaults
 output=${PWD}/output
 results=${PWD}/results
-ipList=$outpath/ipList.txt
+ipList=$results/ipList.txt
 
 function usage {
         echo "usage: $1 [-s subnet] [-l location]"
