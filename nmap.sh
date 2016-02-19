@@ -1,12 +1,12 @@
 #!/bin/bash
 
 function usage {
-        echo "usage: $1 [-s subnet] [-l location] [-r livehost]"
+        echo "usage: $1 [-s subnet] [-l location] [-r livehost] [-o outfile]"
         echo
         echo "      -s subnet:      e.g., 192.168.30.0/23, 192.168.31.206"
         echo "      -l location:    e.g., lab, home, work, big blue box or red"
         echo "      -r results:     e.g., results/ipList.txt"
-        echo "      -o outfile:     e.g., /data/lab/results/"
+        echo "      -o outfile:     e.g., results/ - for screenshots"
         echo "      -h help:"
         echo
 }
@@ -24,13 +24,14 @@ done
 subnet=""
 location=""
 ipList=""
+outFile=""
 
 while getopts ":s:l:r:o:h" OPT; do
         case $OPT in
                 s) subnet=$OPTARG;;
                 l) location=$OPTARG;;
                 r) ipList=$OPTARG;;
-                o) outfile=$OPTARG;;
+                o) outFile=$OPTARG;;
                 h) usage $0; exit;;
                 *) usage $0; exit;;
         esac
@@ -46,6 +47,10 @@ fi
 
 if [ -z "$ipList" ]; then
         ipList="${PWD}/results/ipList.txt"
+fi
+
+if [ -z "$outFile" ]; then
+        outFile="${PWD}/results"
 fi
 
 # For creating report from the XML results
@@ -89,8 +94,8 @@ typeOfScan='nmap-sn'
 nmap -sn $subnet -oG output/$location-$typeOfScan.gnmap
 
 # From the host discovery put together a list of IP Addresses that can be used in future scans
-if [ -f "output/$location-$typeOfScan.gnmap" ]; then
-    grep Up output/$location-$typeOfScan.gnmap | cut -d" " -f2 > $ipList
+if [ -f "${PWD}/output/$location-$typeOfScan.gnmap" ]; then
+    grep Up ${PWD}/output/$location-$typeOfScan.gnmap | cut -d" " -f2 > $ipList
 else
     echo "Unable to find the nmap host discovery list."
     exit
@@ -117,7 +122,7 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,443 --script=http-enum --open'
             '-Pn -n -p 80,443 --script=http-methods --open'
             '-Pn -n --script=http-passwd'
-            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --open');
+            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --script-args=outfile=${outFile}');
 
 declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-sV-Banner'
@@ -147,14 +152,14 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     echo "Running Scan $typeOfScanVar"
     nmap $nmapSwitchesVar -iL $ipList -oA output/$location-$typeOfScanVar
     # Generate a report based on the results
-        xsltproc output/$location-$typeOfScanVar.xml -o results/$location-$typeOfScanVar.html
-        cat << 'EOF2' >> ${PWD}/results/index.html
+        xsltproc ${PWD}/output/$location-$typeOfScanVar.xml -o ${PWD}/results/$location-$typeOfScanVar.html
+cat << 'EOF2' >> ${PWD}/results/index.html
                 <a href="$location-$typeOfScanVar.html">$typeOfScanVar</a></br>
-        EOF2
+EOF2
 done
 
 echo "Moving images into the results folder."
-mv ${PWD}/*.png ${PWD}/results/
+#mv ${PWD}/*.png ${PWD}/results/
 echo "Updating the $location-nmap-HTTP-screenshot.html"
 updhtml $location 'nmap-HTTP-screenshot'
 
