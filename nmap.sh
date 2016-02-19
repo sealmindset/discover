@@ -82,11 +82,16 @@ EOF
 
 # Run a host discovery scan to see which devices are available in the subnet
 typeOfScan='nmap-sn'
-nmap -sn $subnet -oG $output/$location-$typeOfScan.gnmap
+ognmap=$output/$location-$typeOfScan.gnmap
+echo
+echo "Network discovery of live hosts -> $ognmap"
+echo
+nmap -sn $subnet -oG $ognmap
 
 # From the host discovery put together a list of IP Addresses that can be used in future scans
 if [ -f "${output}/$location-$typeOfScan.gnmap" ]; then
-    grep Up $output/$location-$typeOfScan.gnmap | cut -d" " -f2 >> $ipList
+    echo "Creating a $ipList from $ognmap"
+    grep Up $ognmap | cut -d" " -f2 >> $ipList
 else
     echo "Unable to find the nmap host discovery list."
     exit
@@ -113,7 +118,7 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,443 --script=http-enum --open'
             '-Pn -n -p 80,443 --script=http-methods --open'
             '-Pn -n --script=http-passwd'
-            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --script-args=outpath=$results');
+            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --open');
 
 declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-sV-Banner'
@@ -150,7 +155,7 @@ EOF2
 done
 
 echo "Moving images into the results folder."
-#mv ${PWD}/*.png ${PWD}/results/
+mv ${PWD}/*.png $results
 echo "Updating the $location-nmap-HTTP-screenshot.html"
 updhtml $location 'nmap-HTTP-screenshot'
 
