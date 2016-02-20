@@ -25,7 +25,7 @@ for i in `ls $results/*.png | cut -d"/" -f5`;do
         fi
         b=${i/.png/ }
         b=${b/-/:}
-        replace "Saved to $i" "<p><a href='$hstat://$b' target='_blank'>http://$b</a></br><img src='$i'></p>" -- $results/$lc-$sv.html
+        replace "Saved to $i" "<p><a href='$hstat://$b' target='_blank'>$hstat://$b</a></br><img src='$i'></p>" -- $results/$lc-$sv.html
 done
 }
 
