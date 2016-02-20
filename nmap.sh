@@ -162,7 +162,7 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
         echo "</a></br>" >> $results/index.html
 done
 
-if [ -f ${PWD}/*.png ]; then
+if [ $( ls ${PWD}/*.png | wc -l ) -gt 1 ]; then
         mv ${PWD}/*.png $results
         rm ${PWD}/*.html
 fi
