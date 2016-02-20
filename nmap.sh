@@ -18,9 +18,14 @@ function updhtml {
 lc=$1
 sv=$2
 for i in `ls $results/*.png | cut -d"/" -f5`;do
+        if [ `echo $i | grep 443` ]; then
+                hstat="https"
+        else
+                hstat="http"
+        fi
         b=${i/.png/ }
         b=${b/-/:}
-        replace "Saved to $i" "<p><a href='https://$b' target='_blank'>http://$b</a></br><img src='$i'></p>" -- $results/$lc-$sv.html
+        replace "Saved to $i" "<p><a href='$hstat://$b' target='_blank'>http://$b</a></br><img src='$i'></p>" -- $results/$lc-$sv.html
 done
 }
 
