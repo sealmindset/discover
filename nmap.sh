@@ -17,9 +17,7 @@ function usage {
 function updhtml {
 lc=$1
 sv=$2
-cd $results
-for i in `ls -R *.png`;do
-        i=${i/results/}
+for i in `ls $results/*.png | cut -d"/" -f5`;do
         b=${i/.png/ }
         b=${b/-/:}
         replace "Saved to $i" "<p><a href='https://$b' target='_blank'>https://$b</a></br><img src='$i'></p>" -- $results/$lc-$sv.html
