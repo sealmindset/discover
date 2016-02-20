@@ -20,7 +20,7 @@ sv=$2
 for i in `ls $results/*.png | cut -d"/" -f5`;do
         b=${i/.png/ }
         b=${b/-/:}
-        replace "Saved to $i" "<p><a href='https://$b' target='_blank'>https://$b</a></br><img src='$i'></p>" -- $results/$lc-$sv.html
+        replace "Saved to $i" "<p><a href='https://$b' target='_blank'>http://$b</a></br><img src='$i'></p>" -- $results/$lc-$sv.html
 done
 }
 
@@ -112,6 +112,7 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 161 -sU --script snmp-brute'
             '-Pn -n --script=smb-os-discovery.nse -p 445'
             '-Pn -n --script=smb-enum-users.nse -p 445'
+            '-Pn -n -sV -p 445 --script=smb-brute.nse'
             '-Pn -n --script=smb-enum-shares.nse --script-args smbdomain=domain,smbuser=user,smbpass=password -p 445'
             '-Pn -n --script=smb-check-vulns --script-args=unsafe=1 -p 139,445'
             '-Pn -n -sU --script=nbstat.nse -p 137'
@@ -122,6 +123,8 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,443 --script=http-enum --open'
             '-Pn -n -p 80,443 --script=http-methods --open'
             '-Pn -n --script=http-passwd'
+            '-Pn -n --script=http-enum'
+            '-Pn -p 80,443 --script=hostmap-bfk.nse'
             '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --open');
 
 declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
@@ -134,6 +137,7 @@ declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-SNMP'
             'nmap-Samba-445'
             'nmap-smb-enum-users'
+            'nmap-smb-brute'
             'nmap-Samba-enum-shares'
             'nmap-smb-check-vulns'
             'nmap-nbstat'
@@ -144,6 +148,8 @@ declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-HTTP-Paths'
             'nmap-HTTP-Methods'
             'nmap-HTTP-PASSWD'
+            'nmap-HTTP-enum'
+            'nmap-hostmap'
             'nmap-HTTP-screenshot');
 
 for ((i=0; i<${#nmapSwitches[@]}; i++)); do
@@ -156,7 +162,7 @@ for ((i=0; i<${#nmapSwitches[@]}; i++)); do
     # Generate a report based on the results
         xsltproc $output/$location-$typeOfScanVar.xml -o $results/$location-$typeOfScanVar.html
         echo "<a href=\"" >> $results/index.html
-        echo $location-$typeOfScanVar.html
+        echo $location-$typeOfScanVar.html >> $results/index.html
         echo "\">" >> $results/index.html
         echo $typeOfScanVar >> $results/index.html
         echo "</a></br>" >> $results/index.html
