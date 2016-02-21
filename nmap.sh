@@ -128,7 +128,6 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,443 --script=http-enum --open'
             '-Pn -n -p 80,443 --script=http-methods --open'
             '-Pn -n --script=http-passwd'
-            '-Pn -n --script=http-enum'
             '-Pn -p 80,443 --script=hostmap-bfk.nse'
             '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --open');
 
@@ -153,7 +152,6 @@ declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-HTTP-Paths'
             'nmap-HTTP-Methods'
             'nmap-HTTP-PASSWD'
-            'nmap-HTTP-enum'
             'nmap-hostmap'
             'nmap-HTTP-screenshot');
 
