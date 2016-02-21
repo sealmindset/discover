@@ -18,10 +18,11 @@ function updhtml {
 lc=$1
 sv=$2
 for i in `ls $results/*.png | cut -d"/" -f5`;do
+        hstat=""
         case `echo $i | sed 's/\.png//g' | cut -d"-" -f2` in
                 443) hstat="https" ;;
                 8443) hstat="https" ;;
-                *) echo hstat="http" ;;
+                *) hstat="http" ;;
         esac
         b=${i/.png/ }
         b=${b/-/:}
@@ -57,6 +58,7 @@ fi
 if [ ! -f /usr/share/nmap/scripts/smb-check-vulns.nse ]; then
     if [ -f smb-check-vulns.txt ]; then
         cp smb-check-vulns.txt /usr/share/nmap/scripts/smb-check-vulns.nse
+        nmap --script-updatedb
     fi
 fi
 
