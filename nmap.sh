@@ -57,7 +57,7 @@ fi
 
 if [ ! -f /usr/share/nmap/scripts/smb-check-vulns.nse ]; then
     if [ -f smb-check-vulns.txt ]; then
-        cp smb-check-vulns.txt /usr/share/nmap/scripts/smb-check-vulns.nse
+        cp ${PWD}/discover/smb-check-vulns.txt /usr/share/nmap/scripts/smb-check-vulns.nse
         nmap --script-updatedb
     fi
 fi
