@@ -108,7 +108,6 @@ fi
 
 ################### Create a loop of the various nmap scans to perform ##############################
 declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
-            '-Pn -n -sV --script=banner -T5'
             '-Pn -n -sV -p 20,21,22 --open --script=ftp-anon.nse'
             '-Pn -n -sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script=vnc-info.nse'
             '-Pn -n -sV -p 5800,5801,5802,5803,5900,5901,5902,5903 --open --script=realvnc-auth-bypass.nse'
@@ -132,7 +131,6 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --open');
 
 declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
-            'nmap-sV-Banner'
             'nmap-sV-FTP'
             'nmap-sV-VNC'
             'nmap-sV-VNC-auth-bypass'
