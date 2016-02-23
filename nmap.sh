@@ -152,11 +152,13 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,443 --script=http-enum'
             '-Pn -n -p 80,443 --script=http-apache-negotiation'
             '-Pn -n -p 80,443 --script=http-auth-finder'
-            '-Pn -n -p 80,443 --script=http-headers --open'
-            '-Pn -n -p 80,443 --script=http-enum --open'
-            '-Pn -n -p 80,443 --script=http-methods --open'
-            '-Pn -n --script=http-passwd'
-            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html --open');
+            '-Pn -n -p 80,443 --script=http-comments-displayer'
+            '-Pn -n -p 80,443 --script=http-headers'
+            '-Pn -n -p 80,443 --script=http-enum'
+            '-Pn -n -p 80,443 --script=http-methods'
+            '-Pn -n -p 80,443--script=http-passwd'
+            '-Pn -n -p 80,443 --script=http-csrf'
+            '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html');
 
 declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-sV-FTP'
@@ -172,10 +174,12 @@ declare -a typeOfScan=('nmap-Top-20-TCP-Ports'
             'nmap-HTTP-enum'
             'nmap-HTTP-apache-negotiation'
             'nmap-HTTP-auth-finder'
+            'nmap-HTTP-comments-displayer'
             'nmap-HTTP-Headers'
             'nmap-HTTP-Paths'
             'nmap-HTTP-Methods'
             'nmap-HTTP-PASSWD'
+            'nmap-HTTP-csrf'
             'nmap-HTTP-screenshot');
 
 for ((i=0; i<${#nmapSwitches[@]}; i++)); do
