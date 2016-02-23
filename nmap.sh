@@ -17,7 +17,8 @@
 #
 # Description:
 #
-# This tool was meant to show the attack surface of any given device susceptible to vulnerabilities.  
+# This tool was meant to show the attack surface of any given system/application that is possibly susceptible to any number of
+# vulnerabilities.  
 #
 # Two directories are created - output and results - output will contain the raw data, and results will provide the report.
 # smb-check-vulns.nse seems to be missing in th the lastest incarnation of nmap 7.0.1 so a copy (source: offensive-security) is made.
