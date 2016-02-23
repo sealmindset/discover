@@ -21,7 +21,7 @@
 #
 # Two directories are created - output and results - output will contain the raw data, and results will provide the report.
 # smb-check-vulns.nse seems to be missing in th the lastest incarnation of nmap 7.0.1 so a copy (source: offensive-security) is made.
-# Part of the checks is to take a snapshot of any websites running on the next work, so using an updated version of Trustwave's 
+# Part of the checks is to take a snapshot of any websites running on the next work, so used an updated version of Trustwave's 
 # http-screenshot.nse patched by afxdub
 #
 # The main tool is nmap, but additional logic will be incorporated as needed.  This script is based on thepcn3rd handy work, with
