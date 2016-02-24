@@ -118,7 +118,7 @@ cat << 'EOF' > $results/index.html
 EOF
 
 # Run a host discovery scan to see which devices are available in the subnet
-typeOfScan='nmap-sn'
+typeOfScan='nmap-sP-PS-n'
 ognmap=$output/$location-$typeOfScan.gnmap
 echo
 echo "Network discovery of live hosts -> $ognmap"
