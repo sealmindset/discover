@@ -123,7 +123,7 @@ ognmap=$output/$location-$typeOfScan.gnmap
 echo
 echo "Network discovery of live hosts -> $ognmap"
 echo
-nmap -sP $subnet -oG $ognmap
+nmap -sP -n --unprivileged -oG $ognmap $subnet --reason
 
 # From the host discovery put together a list of IP Addresses that can be used in future scans
 if [ -f "${output}/$location-$typeOfScan.gnmap" ]; then
