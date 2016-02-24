@@ -72,10 +72,6 @@ while getopts ":s:l:h" OPT; do
         esac
 done
 
-if [ -z "$subnet" ]; then
-        subnet="192.168.31.200-254"
-fi
-
 if [ -z "$location" ]; then
         location="lab6"
 fi
