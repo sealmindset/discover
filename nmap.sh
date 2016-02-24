@@ -72,6 +72,10 @@ while getopts ":s:l:h" OPT; do
         esac
 done
 
+if [ -f ${PWD}/results/ipList.txt ]; then
+        rm ${PWD}/results/ipList.txt
+fi
+
 if [ -z "$location" ]; then
         location="lab6"
 fi
