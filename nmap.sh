@@ -151,7 +151,7 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -sV --script=smb-brute.nse'
             '-Pn -n --script=smb-enum-shares.nse --script-args smbdomain=domain,smbuser=user,smbpass=password'
             '-Pn -n --script=smb-check-vulns --script-args=unsafe=1'
-            '-Pn -n -sU --script=nbstat.nse'
+            '-Pn -n -sU -p 139,445 --script=nbstat.nse'
             '-Pn -n -p 80,443 --script=http-enum'
             '-Pn -n -p 80,443 --script=http-apache-negotiation'
             '-Pn -n -p 80,443 --script=http-auth-finder'
@@ -217,3 +217,9 @@ cat << 'EOF3' >> $results/index.html
         </body>
 </html>
 EOF3
+
+#nbtscan
+for nbhost in $(grep Up $output/$location'-nmap-nbstat.gnmap' | cut -d" " -f2); do
+        nbtscan -r $nbhost >> $output/$location'-nbstat.txt'
+        enum4linux -a $nbhost >> $output/$location'-nbstat.txt'
+done
