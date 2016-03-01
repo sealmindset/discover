@@ -230,7 +230,7 @@ done
 # SMTP
 for smhost in $(grep 25/open $output/$location'-nmap-Top-20-TCP-Ports.gnmap' | cut -d" " -f2); do
         echo '*********************' >> $output/$location'-SMTP.txt'
-        echo $nbhost >> $output/$location'-SMTP.txt'
+        echo $smhost >> $output/$location'-SMTP.txt'
         echo '*********************' >> $output/$location'-SMTP.txt'
-        nbtscan -r $smhost >> $output/$location'-SMTP.txt'
+        # call python script
 done
