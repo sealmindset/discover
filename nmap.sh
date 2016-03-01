@@ -220,6 +220,17 @@ EOF3
 
 #nbtscan
 for nbhost in $(grep Up $output/$location'-nmap-nbstat.gnmap' | cut -d" " -f2); do
+        echo '*********************' >> $output/$location'-nbstat.txt'
+        echo $nbhost >> $output/$location'-nbstat.txt'
+        echo '*********************' >> $output/$location'-nbstat.txt'
         nbtscan -r $nbhost >> $output/$location'-nbstat.txt'
         enum4linux -a $nbhost >> $output/$location'-nbstat.txt'
+done
+
+# SMTP
+for smhost in $(grep 25/open $output/$location'-nmap-Top-20-TCP-Ports.gnmap' | cut -d" " -f2); do
+        echo '*********************' >> $output/$location'-SMTP.txt'
+        echo $nbhost >> $output/$location'-SMTP.txt'
+        echo '*********************' >> $output/$location'-SMTP.txt'
+        nbtscan -r $smhost >> $output/$location'-SMTP.txt'
 done
