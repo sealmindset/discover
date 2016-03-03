@@ -166,7 +166,7 @@ declare -a nmapSwitches=('-Pn -n -sT --top-ports 20 --open'
             '-Pn -n -p 80,443 --script=http-headers'
             '-Pn -n -p 80,443 --script=http-enum'
             '-Pn -n -p 80,443 --script=http-methods'
-            '-Pn -n -p 80,443--script=http-passwd'
+            '-Pn -n -p 80,443 --script=http-passwd'
             '-Pn -n -p 80,443 --script=http-csrf'
             '-Pn -n -p 80,8000,443,8443 --script=http-screenshot-html');
 
