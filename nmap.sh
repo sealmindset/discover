@@ -102,6 +102,13 @@ if [ ! -f /usr/share/nmap/scripts/http-screenshot-html.nse ]; then
         nmap --script-updatedb
 fi
 
+if [ ! -f /usr/share/nmap/scripts/http-email-harvest.nse ]; then
+    if [ -f http-email-harvest.txt ]; then
+        cp ${PWD}/discover/http-email-harvest.txt /usr/share/nmap/scripts/http-email-harvest.nse
+        nmap --script-updatedb
+    fi
+fi
+
 # Creates the output and the results directory if they need to be created
 if [ ! -d "${PWD}/output" ]; then
     mkdir $output
