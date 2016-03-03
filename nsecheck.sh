@@ -13,7 +13,15 @@ declare -a nmapNSE=('http-vhosts.nse'
                     'http-robots.txt.nse'
                     'ms-sql-info.nse'
                     'ms-sql-config.nse'
-                    'ms-sql-dump-hashes.nse');
+                    'ms-sql-dump-hashes.nse'
+                    'snmp-netstat.nse'
+                    'snmp-processes.nse'
+                    'ftp-anon.nse'
+                    'ftp-bounce.nse'
+                    'ftp-libopie.nse'
+                    'ftp-proftpd-backdoor.nse'
+                    'ftp-vsftpd-backdoor.nse'
+                    'ftp-vuln-cve2010-4221.nse');
 
 for ((i=0; i<${#nmapNSE[@]}; i++)); do
     nmapNSEVar=${nmapNSE[$i]}
