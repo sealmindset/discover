@@ -17,5 +17,9 @@ declare -a nmapNSE=('http-vhosts.nse',
 
 for ((i=0; i<${#nmapNSE[@]}; i++)); do
     nmapNSEVar=${nmapNSE[$i]}
-    echo nmapNSEVar
+    if [ ! -f /usr/share/nmap/scripts/$nmapNSEVar ]; then
+        #cp ${PWD}/discover/smb-check-vulns.txt /usr/share/nmap/scripts/smb-check-vulns.nse
+        #nmap --script-updatedb
+        echo "$nmapNSEVar is missing"
+    fi
 done
