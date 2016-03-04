@@ -4,6 +4,7 @@ Application installation and Setup
   Web Portal
     Logical and Physical Definition
     Keylight Web Portal Setup
+      License
     Supporting Infrastructure Security Controls
     Firewall Rules
       Anonymous External Access
@@ -23,16 +24,22 @@ Application installation and Setup
             Web
           Everyone Users
       Internal
-          Keylight Forest
-            Admin
-              Server Access
-            Everyone
-          Remote Access
-            VPN Users
-            Everyone
+        Keylight Forest
+          Admin
+            Server Access
+          Everyone
+        Remote Access
+          VPN Users
+          Everyone
+        Service Account
+          Domain Level Access
+            Single Account shared between all three servers
+              Password will be exposed
+                Changed once account is setup
   Application
     Logical and Physical Definition
     Keylight Web Portal Setup
+      License
     Supporting Infrastructure Security Controls
     Firewall Rules
       Web Portal to Application
@@ -58,6 +65,11 @@ Application installation and Setup
           Remote Access
             VPN Users
             Everyone
+        Service Account
+          Domain Level Access
+            Single Account shared between all three servers
+              Password will be exposed
+                Changed once account is setup
 Database
     Logical and Physical Definition
     Keylight Web Portal Setup
@@ -85,6 +97,11 @@ Database
           Remote Access
             VPN Users
             Everyone
+        Service Account
+          Domain Level Access
+            Single Account shared between all three servers
+              Password will be exposed
+                Changed once account is setup
 Information Gathering and Requirement Definition (Conversation with Lockpath)
   Requirements
     Web portal externally accessible to everyone
