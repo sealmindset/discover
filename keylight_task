@@ -1,0 +1,171 @@
+Server installation
+  Via the Checklist
+Application installation and Setup
+  Web Portal
+    Logical and Physical Definition
+    Keylight Web Portal Setup
+    Supporting Infrastructure Security Controls
+    Firewall Rules
+      Anonymous External Access
+      Web Portal to Application
+      Internal Access
+    Authentication and Authorization
+      External (Separate AD environment or part of the forest?)
+        Keylight Forest
+          Admin
+            Server Access
+          Service Account
+            Application
+            Database
+            Web
+          Everyone Users
+      Internal
+          Keylight Forest
+            Admin
+              Server Access
+            Everyone
+          Remote Access
+            VPN Users
+            Everyone
+  Application
+    Logical and Physical Definition
+    Keylight Web Portal Setup
+    Supporting Infrastructure Security Controls
+    Firewall Rules
+      Web Portal to Application
+      Application to Database
+      Internal Access
+    Authentication and Authorization
+      External (Separate AD environment or part of the forest?)
+        Keylight Forest
+          Admin
+            Server Access
+          Service Account
+            Application
+            Database
+            Web
+          Everyone Users
+      Internal
+          Keylight Forest
+            Admin
+              Server Access
+            Everyone
+          Remote Access
+            VPN Users
+            Everyone
+Database
+    Logical and Physical Definition
+    Keylight Web Portal Setup
+    Supporting Infrastructure Security Controls
+    Firewall Rules
+      Application to Database
+      Internal Access
+    Authentication and Authorization
+      External (Separate AD environment or part of the forest?)
+        Keylight Forest
+          Admin
+            Server Access
+          Service Account
+            Application
+            Database
+            Web
+          Everyone Users
+      Internal
+          Keylight Forest
+            Admin
+              Server Access
+            Everyone
+          Remote Access
+            VPN Users
+            Everyone
+Information Gathering and Requirement Definition (Conversation with Lockpath)
+  Requirements
+    Web portal externally accessible to everyone
+      Accessibility to partake is by invitation only
+      Administrative access is limited to internal sources
+    Application and Database restricted to trusted sources
+      Accessible by everyone from internal sources only
+      Administrative access is limited to internal sources
+    Importation of existing 3rd Party Risk Management Database [!!!!! This is a must !!!!!!]
+      For historical and on-going tracking, monitoring and audit requirements
+      [To be provided by Synchrony] - Database Field Definitions
+  Automated reporting –(a.k.a., API) [!!!!! This is a must !!!!!!] 
+    Key fields are exported into a report
+      [To be provided by Synchrony] - Database Field Definitions
+    Export is in XML format
+      [To be provided by Synchrony] - XML Field Definitions
+    The report is deposited on a file share to be picked up by another application
+  Capacity Management
+    Infrastructure has the capability to accommodate
+    Capable to monitor capacity
+  Availability Definition
+    BCP/DR
+    Failover
+  Service Level Definition
+    Uptime
+    Response Time
+  Incident Management Definition
+    Accidental or intentional activities
+  Maintenance Definition 
+    Application Update
+      Supporting Infrastructure Update
+      Operating System Updates
+    Vulnerability Assessments
+Primary processes to be implemented
+[This is already documented by both Gary and Rehman respectfully]
+  3rd Party Risk Management [Process 1]
+    Risk Assessment Request
+      Initial information
+      Routing and notification
+    Triage Risk Assessment
+      Review completeness of request
+        Return if incomplete
+        Record responses
+      Assess initial risk
+        Determine Appropriate Questionnaire
+          Sensitivity of the Data
+          How the Data will be handled
+      Issue assessment questionnaire
+        Pre-existing Questionnaire
+        Import of Synchrony’s existing questionnaire
+    Risk Assessment
+      Notification of questionnaire’s completion
+      Initial Risk Rating (as defined within Keylight)
+        [Determine if default definitions within Keylight is acceptable]
+      Request clarification and/or attestation
+        Record response
+        Import supporting documentation
+      Record accept/fail
+      Notification of status to requestor
+    Reporting
+      Pass/Fail
+      Provide evidentiary support per audit request 
+        Linkages via UCF to regulatory and industry requirements
+      Track and monitor remediation activities
+      Alert and notify of deadlines
+Web Application Vulnerability Management [Process 2]
+  Import of Vulnerability Information from various sources
+  Categorize Severity Level of Vulnerabilities
+  Define time to mitigation/remediation
+  Route and notify application owners
+  Track and monitor remediation activities
+    Request clarification, exception and/or attestation
+      Record response/status
+      Import supporting documentation
+    Alert and notify of deadlines/renewal of exceptions
+Lockpath builds both process in Keylight 
+  Authorization Setup
+  Workflows
+  Tables
+  Reports
+  Setup connectors
+Acceptance
+  Regression testing of processes
+  Processes 1 and 2 are implemented
+    Authentication and Authorization
+    Workflows
+    Tables
+    Reports
+    Connectors
+      Import of prior 3rd party  risk assessments
+      Automated XML reporting
