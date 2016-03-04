@@ -12,6 +12,7 @@ Application installation and Setup
     Antivirus
       Exclusion
     Authentication and Authorization
+      Domain Admin POC
       External (Separate AD environment or part of the forest?)
         Keylight Forest
           Admin
