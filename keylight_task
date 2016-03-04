@@ -9,6 +9,8 @@ Application installation and Setup
       Anonymous External Access
       Web Portal to Application
       Internal Access
+    Antivirus
+      Exclusion
     Authentication and Authorization
       External (Separate AD environment or part of the forest?)
         Keylight Forest
@@ -35,6 +37,8 @@ Application installation and Setup
       Web Portal to Application
       Application to Database
       Internal Access
+    Antivirus
+      Exclusion
     Authentication and Authorization
       External (Separate AD environment or part of the forest?)
         Keylight Forest
@@ -60,6 +64,8 @@ Database
     Firewall Rules
       Application to Database
       Internal Access
+    Antivirus
+      Exclusion  
     Authentication and Authorization
       External (Separate AD environment or part of the forest?)
         Keylight Forest
